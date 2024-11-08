@@ -36,7 +36,7 @@
          return;
      }
 
-     fetch("/+/search?q="+encodeURIComponent(keyword), {
+     fetch("/-/search?q="+encodeURIComponent(keyword), {
          method: 'GET',
          cache: 'no-cache'
      }).then(function(resp) {

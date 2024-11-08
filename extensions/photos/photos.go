@@ -36,8 +36,8 @@ var supportedExt = types.Slice[string]{".jpg", ".jpeg", ".gif", ".png"}
 func init() {
 	shortcode.RegisterShortCode("photos", shortcode.ShortCode{Render: photosShortcode})
 	xlog.RegisterTemplate(templates, "templates")
-	xlog.Get(`/+/photos/thumbnail/{path...}`, resizeHandler)
-	xlog.Get(`/+/photos/photo/{path...}`, photoHandler)
+	xlog.Get(`/-/photos/thumbnail/{path...}`, resizeHandler)
+	xlog.Get(`/-/photos/photo/{path...}`, photoHandler)
 }
 
 type Photo struct {
@@ -163,8 +163,8 @@ func NewPhoto(path string) (*Photo, error) {
 	}
 
 	return &Photo{
-		Thumbnail: "/+/photos/thumbnail/" + path,
-		Page:      "/+/photos/photo/" + path,
+		Thumbnail: "/-/photos/thumbnail/" + path,
+		Page:      "/-/photos/photo/" + path,
 		Original:  path,
 		Exif:      exifData,
 		Time:      t,

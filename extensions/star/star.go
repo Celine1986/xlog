@@ -21,8 +21,8 @@ func init() {
 	RegisterCommand(starAction)
 	RegisterQuickCommand(starAction)
 	RegisterLink(starredPages)
-	Post(`/+/star/{page...}`, starHandler)
-	Delete(`/+/star/{page...}`, unstarHandler)
+	Post(`/-/star/{page...}`, starHandler)
+	Delete(`/-/star/{page...}`, unstarHandler)
 	RegisterTemplate(templates, "templates")
 }
 
@@ -89,7 +89,7 @@ func (l action) Widget() template.HTML {
 
 	return Partial("star", Locals{
 		"starred": starred,
-		"action":  fmt.Sprintf("/+/star/%s", url.PathEscape(l.page.Name())),
+		"action":  fmt.Sprintf("/-/star/%s", url.PathEscape(l.page.Name())),
 	})
 }
 

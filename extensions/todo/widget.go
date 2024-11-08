@@ -23,7 +23,7 @@ const script = `
 	  data.append('page', '%s');
 	  data.append('pos', this.dataset.pos);
 
-	  fetch("/+/todo", {method: 'POST', body: data});
+	  fetch("/-/todo", {method: 'POST', body: data});
 	}
 	let todos = document.querySelectorAll(".view input[type=checkbox][data-pos]");
 	todos.forEach(elem => elem.addEventListener("click", toggleCheckbox));

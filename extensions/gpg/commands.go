@@ -36,7 +36,7 @@ func (e *encryptCommand) Name() string         { return "Make private" }
 func (e *encryptCommand) Link() string         { return "" }
 func (e *encryptCommand) OnClick() template.JS { return "encrypt(event)" }
 func (e *encryptCommand) Widget() template.HTML {
-	action := "/+/gpg/encrypt/" + url.PathEscape(e.page.Name())
+	action := "/-/gpg/encrypt/" + url.PathEscape(e.page.Name())
 	return template.HTML(fmt.Sprintf(`
 	  <script>
 	  function encrypt(event) {
@@ -63,7 +63,7 @@ func (e *decryptCommand) Name() string         { return "Make public" }
 func (e *decryptCommand) Link() string         { return "" }
 func (e *decryptCommand) OnClick() template.JS { return "decrypt(event)" }
 func (e *decryptCommand) Widget() template.HTML {
-	action := "/+/gpg/decrypt/" + url.PathEscape(e.page.Name())
+	action := "/-/gpg/decrypt/" + url.PathEscape(e.page.Name())
 	return template.HTML(fmt.Sprintf(`
 	  <script>
 	  function decrypt(event) {

@@ -24,10 +24,10 @@ import (
 var templates embed.FS
 
 func init() {
-	Get(`/+/tags`, tagsHandler)
-	Get(`/+/tag/{tag}`, tagHandler)
+	Get(`/-/tags`, tagsHandler)
+	Get(`/-/tag/{tag}`, tagHandler)
 	RegisterWidget(AFTER_VIEW_WIDGET, 1, relatedPages)
-	RegisterBuildPage("/+/tags", true)
+	RegisterBuildPage("/-/tags", true)
 	RegisterLink(func(_ Page) []Link { return []Link{link(0)} })
 	RegisterAutocomplete(autocomplete(0))
 	RegisterTemplate(templates, "templates")
@@ -45,7 +45,7 @@ type link int
 
 func (l link) Icon() string { return "fa-solid fa-tags" }
 func (l link) Name() string { return "Hashtags" }
-func (l link) Link() string { return "/+/tags" }
+func (l link) Link() string { return "/-/tags" }
 
 type HashTag struct {
 	ast.BaseInline
@@ -99,9 +99,9 @@ func renderHashtag(writer util.BufWriter, source []byte, n ast.Node, entering bo
 	}
 
 	tag := n.(*HashTag)
-	fmt.Fprintf(writer, `<a href="/+/tag/%s" class="tag">%s</a>`, tag.value, tag.value)
-	RegisterBuildPage(fmt.Sprintf("/+/tag/%s", tag.value), true)
-	RegisterBuildPage(fmt.Sprintf("/+/tag/%s", strings.ToLower(string(tag.value))), true)
+	fmt.Fprintf(writer, `<a href="/-/tag/%s" class="tag">%s</a>`, tag.value, tag.value)
+	RegisterBuildPage(fmt.Sprintf("/-/tag/%s", tag.value), true)
+	RegisterBuildPage(fmt.Sprintf("/-/tag/%s", strings.ToLower(string(tag.value))), true)
 	return ast.WalkContinue, nil
 }
 

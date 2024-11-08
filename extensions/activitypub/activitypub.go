@@ -26,9 +26,9 @@ func init() {
 	flag.StringVar(&image, "activitypub.image", "/public/logo.png", "the path to the activitypub profile image. mastodon use it as profile cover for example.")
 
 	Get(`/.well-known/webfinger`, webfinger)
-	Get(`/+/activitypub/{user}/outbox/{page}`, outboxPage)
-	Get(`/+/activitypub/{user}/outbox`, outbox)
-	Get(`/+/activitypub/{user}`, profile)
+	Get(`/-/activitypub/{user}/outbox/{page}`, outboxPage)
+	Get(`/-/activitypub/{user}/outbox`, outbox)
+	Get(`/-/activitypub/{user}`, profile)
 	RegisterWidget(HEAD_WIDGET, 1, meta)
 }
 
@@ -38,10 +38,10 @@ func meta(p Page) template.HTML {
 	}
 
 	RegisterBuildPage("/.well-known/webfinger", false)
-	RegisterBuildPage(fmt.Sprintf("/+/activitypub/@%s", username), true)
-	RegisterBuildPage(fmt.Sprintf("/+/activitypub/@%s/outbox", username), true)
+	RegisterBuildPage(fmt.Sprintf("/-/activitypub/@%s", username), true)
+	RegisterBuildPage(fmt.Sprintf("/-/activitypub/@%s/outbox", username), true)
 
-	o := fmt.Sprintf(`<link href='https://%s/+/activitypub/@%s' rel='alternate' type='application/activity+json'>`, domain, username)
+	o := fmt.Sprintf(`<link href='https://%s/-/activitypub/@%s' rel='alternate' type='application/activity+json'>`, domain, username)
 
 	return template.HTML(o)
 }
@@ -62,7 +62,7 @@ func webfinger(w Response, r Request) Output {
 			Subject: fmt.Sprintf("acct:%s@%s", username, domain),
 			Aliases: []string{
 				fmt.Sprintf("https://%s", domain),
-				fmt.Sprintf("https://%s/+/activitypub/@%s", domain, username),
+				fmt.Sprintf("https://%s/-/activitypub/@%s", domain, username),
 			},
 			Links: []map[string]string{
 				{
@@ -73,7 +73,7 @@ func webfinger(w Response, r Request) Output {
 				{
 					"rel":  "self",
 					"type": "application/activity+json",
-					"href": fmt.Sprintf("https://%s/+/activitypub/@%s", domain, username),
+					"href": fmt.Sprintf("https://%s/-/activitypub/@%s", domain, username),
 				},
 				// TODO we need to make sure this is actually needed
 				{
@@ -112,16 +112,16 @@ func profile(w Response, r Request) Output {
 	return JsonResponse(
 		profileResponse{
 			Context:           "https://www.w3.org/ns/activitystreams",
-			ID:                fmt.Sprintf("https://%s/+/activitypub/@%s", domain, username),
+			ID:                fmt.Sprintf("https://%s/-/activitypub/@%s", domain, username),
 			Type:              "Person",
 			PreferredUsername: username,
 			Name:              username,
 			Summary:           summary,
 			URL:               fmt.Sprintf("https://%s", domain),
-			Inbox:             fmt.Sprintf("https://%s/+/activitypub/@%s/inbox", domain, username),
-			Outbox:            fmt.Sprintf("https://%s/+/activitypub/@%s/outbox", domain, username),
+			Inbox:             fmt.Sprintf("https://%s/-/activitypub/@%s/inbox", domain, username),
+			Outbox:            fmt.Sprintf("https://%s/-/activitypub/@%s/outbox", domain, username),
 			Endpoints: map[string]string{
-				"sharedInbox": fmt.Sprintf("https://%s/+/activitypub/@%s/inbox", domain, username),
+				"sharedInbox": fmt.Sprintf("https://%s/-/activitypub/@%s/inbox", domain, username),
 			},
 			Icon: map[string]string{
 				"type":      "Image",
@@ -159,17 +159,17 @@ func outbox(w Response, r Request) Output {
 	count := 0
 	EachPage(r.Context(), func(_ Page) {
 		count += 1
-		RegisterBuildPage(fmt.Sprintf("/+/activitypub/@%s/outbox/%d", username, count), false)
+		RegisterBuildPage(fmt.Sprintf("/-/activitypub/@%s/outbox/%d", username, count), false)
 	})
 
 	return JsonResponse(
 		outboxResponse{
 			Context:    "https://www.w3.org/ns/activitystreams",
-			ID:         fmt.Sprintf("https://%s/+/activitypub/@%s/outbox", domain, username),
+			ID:         fmt.Sprintf("https://%s/-/activitypub/@%s/outbox", domain, username),
 			Type:       "OrderedCollection",
 			TotalItems: count,
-			First:      fmt.Sprintf("https://%s/+/activitypub/@%s/outbox/1", domain, username),
-			Last:       fmt.Sprintf("https://%s/+/activitypub/@%s/outbox/%d", domain, username, count),
+			First:      fmt.Sprintf("https://%s/-/activitypub/@%s/outbox/1", domain, username),
+			Last:       fmt.Sprintf("https://%s/-/activitypub/@%s/outbox/%d", domain, username, count),
 		},
 	)
 }
@@ -233,16 +233,16 @@ func outboxPage(w Response, r Request) Output {
 	return JsonResponse(
 		outboxPageResponse{
 			Context: "https://www.w3.org/ns/activitystreams",
-			ID:      fmt.Sprintf("https://%s/+/activitypub/@%s/outbox/%d", domain, username, pageIndex),
+			ID:      fmt.Sprintf("https://%s/-/activitypub/@%s/outbox/%d", domain, username, pageIndex),
 			Type:    "OrderedCollectionPage",
-			Prev:    fmt.Sprintf("https://%s/+/activitypub/@%s/outbox/%d", domain, username, pageIndex-1),
-			Next:    fmt.Sprintf("https://%s/+/activitypub/@%s/outbox/%d", domain, username, pageIndex+1),
-			PartOf:  fmt.Sprintf("https://%s/+/activitypub/@%s/outbox", domain, username),
+			Prev:    fmt.Sprintf("https://%s/-/activitypub/@%s/outbox/%d", domain, username, pageIndex-1),
+			Next:    fmt.Sprintf("https://%s/-/activitypub/@%s/outbox/%d", domain, username, pageIndex+1),
+			PartOf:  fmt.Sprintf("https://%s/-/activitypub/@%s/outbox", domain, username),
 			OrderedItems: []outboxPageItem{
 				{
 					ID:        u.String(),
 					Type:      "Create",
-					Actor:     fmt.Sprintf("https://%s/+/activitypub/@%s", domain, username),
+					Actor:     fmt.Sprintf("https://%s/-/activitypub/@%s", domain, username),
 					Published: page.ModTime(),
 					To:        []string{"https://www.w3.org/ns/activitystreams#Public"},
 					Object: outboxPageObject{
@@ -250,7 +250,7 @@ func outboxPage(w Response, r Request) Output {
 						Type:         "Note",
 						Published:    page.ModTime(),
 						URL:          u.String(),
-						AttributedTo: fmt.Sprintf("https://%s/+/activitypub/@%s", domain, username),
+						AttributedTo: fmt.Sprintf("https://%s/-/activitypub/@%s", domain, username),
 						To:           []string{"https://www.w3.org/ns/activitystreams#Public"},
 						Content:      fmt.Sprintf("%s\n%s", page.Name(), u.String()),
 					},

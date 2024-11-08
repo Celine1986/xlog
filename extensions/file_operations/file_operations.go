@@ -23,8 +23,8 @@ func init() {
 	RegisterCommand(commands)
 	RegisterQuickCommand(commands)
 
-	Post(`/+/file/rename`, rename.Handler)
-	Delete(`/+/file/delete`, delete.Handler)
+	Post(`/-/file/rename`, rename.Handler)
+	Delete(`/-/file/delete`, delete.Handler)
 	RegisterTemplate(templates, "templates")
 }
 
@@ -61,7 +61,7 @@ func (f PageRename) Widget() template.HTML {
 
 	return Partial("file-operations-rename", Locals{
 		"page":   f.page.Name(),
-		"action": "/+/file/rename",
+		"action": "/-/file/rename",
 	})
 }
 
@@ -109,7 +109,7 @@ func (f PageDelete) Widget() template.HTML {
 	}
 
 	return Partial("file-operations-delete", Locals{
-		"action": "/+/file/delete?page=" + url.QueryEscape(f.page.Name()),
+		"action": "/-/file/delete?page=" + url.QueryEscape(f.page.Name()),
 	})
 }
 

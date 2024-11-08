@@ -13,8 +13,8 @@ import (
 var templates embed.FS
 
 func init() {
-	Get(`/+/recent`, recentHandler)
-	RegisterBuildPage("/+/recent", true)
+	Get(`/-/recent`, recentHandler)
+	RegisterBuildPage("/-/recent", true)
 	RegisterTemplate(templates, "templates")
 	RegisterLink(func(_ Page) []Link { return []Link{links(0)} })
 }
@@ -39,4 +39,4 @@ type links int
 
 func (l links) Icon() string { return "fa-solid fa-clock-rotate-left" }
 func (l links) Name() string { return "Recent" }
-func (l links) Link() string { return "/+/recent" }
+func (l links) Link() string { return "/-/recent" }

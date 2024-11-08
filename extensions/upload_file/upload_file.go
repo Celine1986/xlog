@@ -71,7 +71,7 @@ func init() {
 		}
 	})
 
-	Post(`/+/upload-file`, uploadFileHandler)
+	Post(`/-/upload-file`, uploadFileHandler)
 	RegisterTemplate(templates, "templates")
 }
 
@@ -104,8 +104,8 @@ func (u command) Widget() template.HTML {
 
 	return Partial("upload-file", Locals{
 		"page":           u.page,
-		"action":         "/+/upload-file?page=" + url.QueryEscape(u.page.Name()),
-		"editModeAction": "/+/upload-file",
+		"action":         "/-/upload-file?page=" + url.QueryEscape(u.page.Name()),
+		"editModeAction": "/-/upload-file",
 	})
 }
 

@@ -19,7 +19,7 @@ var (
 
 func init() {
 	Listen(Changed, NotifyPageChange)
-	Get(`/+/hotreload`, handleWebSocket)
+	Get(`/-/hotreload`, handleWebSocket)
 	RegisterWidget(AFTER_VIEW_WIDGET, 0, clientWidget)
 }
 
@@ -82,7 +82,7 @@ func handleWebSocket(w Response, r Request) Output {
 const clientScript = `
     <script>
     (() => {
-        const socketUrl = 'ws://'+window.location.host+'/+/hotreload';
+        const socketUrl = 'ws://'+window.location.host+'/-/hotreload';
         let socket = new WebSocket(socketUrl);
         socket.addEventListener('message', (evt) => {
             let data = JSON.parse(evt.data)

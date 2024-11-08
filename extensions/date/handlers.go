@@ -12,7 +12,7 @@ var templates embed.FS
 
 func init() {
 	RegisterTemplate(templates, "templates")
-	Get(`/+/date/{date}`, dateHandler)
+	Get(`/-/date/{date}`, dateHandler)
 }
 
 func dateHandler(w Response, r Request) Output {
